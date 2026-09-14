@@ -44,6 +44,12 @@ const markers = [
 const out = {
   W, H, geo, markers,
   scores: Object.fromEntries(Object.entries(scores).map(([k, v]) => [k, {
-    n: v.n, iso: v.iso, food: v.food, energy: v.energy, gov: v.gov,ˆ\™Ù]ˆ‹\™Ù][œÎˆ‹™[œËÛ[Nˆ‹˜Û[KÛİ]ˆ‹œÛİ]›İNˆ‹››İH	ÉÂˆWJJKŸNÂ‚™œËÜš]Qš[TŞ[˜Ê	Ù]KšœÛÛ‰Ë”ÓÓ‹œİš[™ÚYJİ]
-JNÂ˜ÛÛœÛÛK›ÙÊ™X]\™\Îˆ	ÙÙ[Ë›[™İHØÛÜ™Yˆ	ÛX]ÚYH[œØÛÜ™Yˆ	İ[›X]ÚY›[™İX
-NÂ˜ÛÛœÛÛK›ÙÊ	Û\™Ù\İ[œØÛÜ™Y‰Ë[›X]ÚYœÛXÙJJKš›Ú[Š	Ë	ÊJNÂ˜ÛÛœÛÛK›ÙÊ	Ø]\Î‰ËœËœİ]Ş[˜Ê	Ù]KšœÛÛ‰ÊKœÚ^™JNÂ
+    n: v.n, iso: v.iso, food: v.food, energy: v.energy, gov: v.gov,
+    target: v.target, dens: v.dens, clim: v.clim, south: v.south || 0, note: v.note || ''
+  }])),
+};
+
+fs.writeFileSync('data.json', JSON.stringify(out));
+console.log(`features: ${geo.length}  scored: ${matched}  unscored: ${unmatched.length}`);
+console.log('largest unscored:', unmatched.slice(0, 25).join(', '));
+console.log('bytes:', fs.statSync('data.json').size);
