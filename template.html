@@ -1,0 +1,430 @@
+<title>Survival Geography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<style>
+:root{
+  --ground:#EDF0F0; --surface:#F8FAF9; --surface-2:#E4EAEA; --ocean:#DCE3E4;
+  --ink:#151F1E; --ink-2:#46575A; --ink-3:#77898C;
+  --line:#C7D2D2; --line-soft:#DDE4E4; --accent:#1B6A6D; --accent-soft:#D3E4E3;
+  --cborder:rgba(21,31,31,.32); --focus:#1B6A6D;
+  --r1:#8C2F22; --r2:#B04A34; --r3:#CE7A57; --r4:#E5AD87; --r5:#D9D5CE;
+  --r6:#9CC0BC; --r7:#5E9E9C; --r8:#2E7B7C; --r9:#12585C;
+  --none:#CDD6D6;
+  --shadow:0 1px 2px rgba(18,34,34,.06),0 8px 24px -12px rgba(18,34,34,.18);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#0E1415; --surface:#161F20; --surface-2:#1C2627; --ocean:#101718;
+  --ink:#E7EEED; --ink-2:#A2B2B3; --ink-3:#6C7E80;
+  --line:#293536; --line-soft:#1D2728; --accent:#59A9A7; --accent-soft:#1B3535;
+  --cborder:rgba(231,238,237,.20); --focus:#59A9A7;
+  --r1:#B8452F; --r2:#CA6244; --r3:#DB8A62; --r4:#C9A98E; --r5:#85807A;
+  --r6:#7FB0AD; --r7:#55A09E; --r8:#2F8688; --r9:#1E6C72;
+  --none:#222D2E;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+}}
+:root[data-theme="dark"]{
+  --ground:#0E1415; --surface:#161F20; --surface-2:#1C2627; --ocean:#101718;
+  --ink:#E7EEED; --ink-2:#A2B2B3; --ink-3:#6C7E80;
+  --line:#293536; --line-soft:#1D2728; --accent:#59A9A7; --accent-soft:#1B3535;
+  --cborder:rgba(231,238,237,.20); --focus:#59A9A7;
+  --r1:#B8452F; --r2:#CA6244; --r3:#DB8A62; --r4:#C9A98E; --r5:#85807A;
+  --r6:#7FB0AD; --r7:#55A09E; --r8:#2F8688; --r9:#1E6C72;
+  --none:#222D2E;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:Newsreader,Georgia,"Times New Roman",serif;
+  font-size:16px; line-height:1.55; margin:0;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px; margin:0 auto; padding-inline:20px; padding-block:34px 56px}
+h1,h2,h3,.ui{font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace; font-variant-numeric:tabular-nums}
+
+/* ---------- header ---------- */
+header{border-bottom:1px solid var(--line); padding-bottom:22px; margin-bottom:26px}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 10px}
+h1{font-size:clamp(30px,5.2vw,50px); font-weight:700; line-height:1.02;
+  letter-spacing:-.022em; margin:0 0 14px; text-wrap:balance}
+.standfirst{font-size:clamp(16px,2vw,18.5px); color:var(--ink-2); margin:0; max-width:64ch}
+.standfirst em{color:var(--ink); font-style:italic}
+
+/* ---------- lens selector ---------- */
+.lens-head{display:flex; flex-wrap:wrap; align-items:baseline; gap:10px 16px; margin:0 0 12px}
+.lens-head h2{font-size:13px; font-weight:600; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-3); margin:0; font-family:"IBM Plex Mono",monospace}
+.lens-head .hint{font-size:14px; color:var(--ink-3); margin:0}
+.lenses{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px; padding:0; list-style:none}
+.lens{
+  appearance:none; cursor:pointer; text-align:left;
+  background:var(--surface); border:1px solid var(--line); border-radius:3px;
+  padding:9px 14px 10px; color:var(--ink-2); font-family:Archivo,sans-serif;
+  display:flex; flex-direction:column; gap:2px; transition:border-color .13s,background .13s,color .13s;
+}
+.lens b{font-size:14px; font-weight:600; letter-spacing:-.005em; color:var(--ink)}
+.lens span{font-size:11.5px; font-family:"IBM Plex Mono",monospace; color:var(--ink-3); letter-spacing:.01em}
+.lens:hover{border-color:var(--ink-3)}
+.lens[aria-pressed="true"]{background:var(--accent); border-color:var(--accent)}
+.lens[aria-pressed="true"] b,.lens[aria-pressed="true"] span{color:#fff}
+:root[data-theme="dark"] .lens[aria-pressed="true"] b,:root[data-theme="dark"] .lens[aria-pressed="true"] span{color:#08110F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lens[aria-pressed="true"] b,
+:root:not([data-theme="light"]) .lens[aria-pressed="true"] span{color:#08110F}}
+:where(button,a,[tabindex]):focus-visible{outline:2px solid var(--focus); outline-offset:2px; border-radius:2px}
+
+/* ---------- map ---------- */
+.mapcard{background:var(--ocean); border:1px solid var(--line); border-radius:4px;
+  padding:6px 6px 0; box-shadow:var(--shadow); position:relative}
+svg.map{display:block; width:100%; height:auto; max-width:100%}
+.map path.c{stroke:var(--cborder); stroke-width:.4; stroke-linejoin:round; transition:fill .28s ease}
+.map path.c.hit{cursor:pointer}
+.map path.ns{fill:var(--none)}
+.s1{fill:var(--r1)}.s2{fill:var(--r2)}.s3{fill:var(--r3)}.s4{fill:var(--r4)}.s5{fill:var(--r5)}
+.s6{fill:var(--r6)}.s7{fill:var(--r7)}.s8{fill:var(--r8)}.s9{fill:var(--r9)}
+.map path.on{stroke:var(--ink); stroke-width:1.15}
+.mk{cursor:pointer}
+.mk circle.o{fill:none; stroke:var(--ink); stroke-width:1.1; opacity:.5}
+.mk circle.i{fill:var(--ink); stroke:var(--ocean); stroke-width:1}
+.mk.on circle.o{opacity:1; stroke-width:1.8}
+.mk.on circle.i{r:3.4}
+
+/* legend */
+.legend{display:flex; flex-wrap:wrap; align-items:center; gap:10px 18px;
+  padding:11px 8px 12px; background:var(--ocean)}
+.ramp{display:flex; align-items:center; gap:0}
+.ramp i{display:block; width:26px; height:11px; border-radius:0}
+.ramp i:first-child{border-radius:2px 0 0 2px}.ramp i:last-child{border-radius:0 2px 2px 0}
+.lgl{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-2)}
+.lgnote{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--ink-3); letter-spacing:.04em}
+
+/* ---------- panels ---------- */
+.cols{display:grid; grid-template-columns:1.45fr 1fr; gap:18px; margin-top:18px; align-items:start}
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:4px; box-shadow:var(--shadow)}
+.ph{display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  padding:13px 18px; border-bottom:1px solid var(--line-soft)}
+.ph h3{font-size:11.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); margin:0; font-family:"IBM Plex Mono",monospace}
+.ph .ct{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3)}
+
+/* detail */
+.dbody{padding:16px 18px 20px}
+.dtop{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:4px}
+.dname{font-family:Archivo,sans-serif; font-size:26px; font-weight:700; letter-spacing:-.018em;
+  line-height:1.1; margin:0; text-wrap:balance}
+.dscore{text-align:right; flex:none}
+.dscore b{display:block; font-family:"IBM Plex Mono",monospace; font-size:34px; font-weight:600;
+  line-height:1; letter-spacing:-.03em; font-variant-numeric:tabular-nums}
+.dscore span{display:block; font-family:"IBM Plex Mono",monospace; font-size:10px;
+  letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3); margin-top:5px}
+.drank{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-3);
+  letter-spacing:.05em; margin:0 0 16px}
+.dnote{font-size:16.5px; line-height:1.58; color:var(--ink-2); margin:0 0 20px; max-width:62ch}
+.dnote:empty{display:none}
+
+.dims{display:grid; gap:9px; margin:0; padding:18px 0 0; border-top:1px solid var(--line-soft)}
+.dim{display:grid; grid-template-columns:118px 1fr 26px; align-items:center; gap:12px}
+.dim dt{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.bar{height:7px; background:var(--surface-2); border-radius:0 4px 4px 0; position:relative}
+.bar i{display:block; height:100%; border-radius:0 4px 4px 0; background:var(--accent); transition:width .3s ease}
+.dim dd{margin:0; font-family:"IBM Plex Mono",monospace; font-size:12px; text-align:right;
+  color:var(--ink-2); font-variant-numeric:tabular-nums}
+.dim.wt dd{color:var(--ink); font-weight:600}
+.dim.off{opacity:.4}
+.dimkey{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--ink-3);
+  margin:13px 0 0; letter-spacing:.03em; line-height:1.6}
+
+/* rank list */
+.rank{list-style:none; margin:0; padding:6px 0 8px; max-height:474px; overflow-y:auto}
+.rank li{margin:0}
+.rk{width:100%; display:grid; grid-template-columns:26px 1fr auto; align-items:center; gap:10px;
+  background:none; border:0; border-left:3px solid transparent; cursor:pointer; text-align:left;
+  padding:6px 16px 6px 13px; color:var(--ink); font-family:Archivo,sans-serif; font-size:14.5px;
+  transition:background .12s}
+.rk:hover{background:var(--surface-2)}
+.rk[aria-current="true"]{background:var(--surface-2); border-left-color:var(--accent)}
+.rk .n{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+.rk .v{display:flex; align-items:center; gap:8px}
+.rk .sw{width:11px; height:11px; border-radius:2px; flex:none; border:1px solid var(--cborder)}
+.rk .num{font-family:"IBM Plex Mono",monospace; font-size:13px; font-variant-numeric:tabular-nums; color:var(--ink-2)}
+.rk .nm{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.tabs{display:flex; gap:2px}
+.tab{appearance:none; background:none; border:0; cursor:pointer; padding:3px 8px; border-radius:2px;
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-3)}
+.tab[aria-pressed="true"]{background:var(--accent-soft); color:var(--accent)}
+
+/* regional picks */
+.picks{margin-top:18px}
+.plist{list-style:none; margin:0; padding:4px 0 6px; display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.pk{width:100%; text-align:left; background:none; border:0; cursor:pointer; padding:12px 18px;
+  display:grid; gap:3px; color:var(--ink); transition:background .12s}
+.pk:hover,.pk[aria-current="true"]{background:var(--surface-2)}
+.pk b{font-family:Archivo,sans-serif; font-size:14.5px; font-weight:600; letter-spacing:-.005em}
+.pk span{font-size:14.5px; color:var(--ink-2); line-height:1.5}
+
+/* method */
+.method{margin-top:34px; padding-top:24px; border-top:1px solid var(--line)}
+.method h2{font-size:11.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 14px; font-family:"IBM Plex Mono",monospace}
+.method p{margin:0 0 13px; max-width:68ch; color:var(--ink-2); font-size:16px}
+.method p strong{color:var(--ink); font-weight:500}
+.caveat{border-left:2px solid var(--r2); padding-left:16px; margin-top:20px}
+.caveat p{margin-bottom:0}
+
+@media (max-width:880px){
+  .cols{grid-template-columns:1fr}
+  .rank{max-height:340px}
+}
+@media (max-width:440px){
+  .wrap{padding-inline:16px}
+  .dim{grid-template-columns:92px 1fr 24px; gap:8px}
+  .lenses{gap:6px}
+  .lens{padding:8px 11px 9px}
+  .ramp i{width:17px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow" id="eyebrow">Threat geography · four failure modes</p>
+  <h1>Survival Geography</h1>
+  <p class="standfirst">Where you'd want to be if AI's most likely <em>physical</em> threats arrive — an attack on infrastructure, an engineered pathogen, autonomous weapons, or a nuclear exchange triggered by compressed decision time. Switch the lens; the map re-scores.</p>
+</header>
+
+<div class="lens-head">
+  <h2>Threat lens</h2>
+  <p class="hint">Each lens reweights the same seven underlying measures.</p>
+</div>
+<div class="lenses" role="group" aria-label="Threat lens"></div>
+
+<div class="mapcard">
+  <svg class="map" id="map" viewBox="0 0 1120 560" role="img" aria-label="World map shaded by resilience score. A ranked table of all countries appears below.">
+    <g id="paths"></g><g id="marks"></g>
+  </svg>
+  <div class="legend">
+    <span class="lgl">Exposed</span>
+    <span class="ramp" aria-hidden="true"><i style="background:var(--r1)"></i><i style="background:var(--r2)"></i><i style="background:var(--r3)"></i><i style="background:var(--r4)"></i><i style="background:var(--r5)"></i><i style="background:var(--r6)"></i><i style="background:var(--r7)"></i><i style="background:var(--r8)"></i><i style="background:var(--r9)"></i></span>
+    <span class="lgl">Resilient</span>
+    <span class="lgnote" id="lgdomain">2.0 &rarr; 9.5 index</span>
+    <span class="lgnote">● = sub-national pick</span>
+  </div>
+</div>
+
+<div class="cols">
+  <section class="panel" aria-live="polite">
+    <div class="ph"><h3>Assessment</h3><span class="ct" id="lensname"></span></div>
+    <div class="dbody" id="detail"></div>
+  </section>
+
+  <section class="panel">
+    <div class="ph">
+      <h3>Ranking</h3>
+      <div class="tabs" role="group" aria-label="Sort direction">
+        <button class="tab" data-dir="top" aria-pressed="true">Best</button>
+        <button class="tab" data-dir="bot" aria-pressed="false">Worst</button>
+      </div>
+    </div>
+    <ol class="rank" id="rank"></ol>
+  </section>
+</div>
+
+<section class="panel picks">
+  <div class="ph"><h3>Sub-national picks</h3><span class="ct">where the national score hides the real answer</span></div>
+  <ul class="plist" id="picks"></ul>
+</section>
+
+<section class="method">
+  <h2>How this is scored</h2>
+  <p>Every state gets a 0–10 rating on seven measures: <strong>isolation</strong> (how controllable its borders and approaches are), <strong>food self-sufficiency</strong> (calories produced against calories eaten, without imported inputs), <strong>energy independence</strong> (domestic generation that survives a fuel cutoff — hydro, geothermal, nuclear — plus refining capacity), <strong>state capacity</strong>, <strong>low strategic value</strong> (10 means nobody's target list includes you), <strong>dispersal</strong>, and <strong>climate survivability</strong> without industrial inputs. Each lens weights those seven differently. The nuclear lens adds a bonus for the southern hemisphere, where both fallout and the agricultural effects of nuclear winter fall considerably lighter.</p>
+  <p>The weightings are mine and they are arguable — that's the point of exposing them. The bars in the assessment panel show which measures the active lens is actually leaning on, so you can see what's driving any given score rather than taking the number on faith.</p>
+  <div class="caveat">
+    <p><strong>What this map cannot tell you.</strong> It scores geography, and geography is the second-most important variable. The best-documented predictor of who comes through a collapse is whether you are embedded in a community that cooperates under stress — which is a function of how long you've lived somewhere and who knows your name, not of hydroelectric capacity. A person who relocates to a top-decile square as a stranger is very plausibly worse off than one who stays put in a mid-tier square among twenty years of relationships. And in the scenario most people mean by "AI apocalypse" — a capable, misaligned system that wants humans gone — none of this matters at all. That scenario has no geography. These four do.</p>
+  </div>
+</section>
+</div>
+
+<script type="application/json" id="DATA">__DATA__</script>
+<script>
+(function(){
+const D = JSON.parse(document.getElementById('DATA').textContent);
+
+const DIMS = {
+  iso:'Isolation', food:'Food supply', energy:'Energy', gov:'State capacity',
+  target:'Low target value', dens:'Dispersal', clim:'Climate'
+};
+const LENSES = [
+  {k:'all',  name:'All four threats', sub:'composite',
+   w:{iso:.16,food:.20,energy:.16,gov:.16,target:.14,dens:.08,clim:.10}},
+  {k:'grid', name:'Infrastructure attack', sub:'grid · water · hospitals',
+   w:{energy:.38,clim:.20,food:.18,gov:.16,dens:.08}},
+  {k:'bio',  name:'Engineered pathogen', sub:'mass-casualty bio',
+   w:{iso:.34,dens:.18,gov:.20,food:.14,clim:.06,energy:.08}},
+  {k:'conflict', name:'Autonomous weapons', sub:'drones · proxy conflict',
+   w:{target:.32,gov:.24,iso:.18,dens:.12,food:.14}},
+  {k:'nuclear', name:'Nuclear exchange', sub:'the low-probability tail',
+   w:{target:.28,iso:.18,food:.20,clim:.14,dens:.12,energy:.08}, south:true}
+];
+const LO = 2.0, HI = 9.5;
+
+let lens = LENSES[0], sel = '554', dir = 'top';
+
+function score(s, L){
+  let v = 0;
+  for (const k in L.w) v += s[k] * L.w[k];
+  if (L.south && s.south) v += 0.6;
+  return Math.min(10, v);
+}
+const step = v => Math.max(1, Math.min(9, Math.round(((v - LO) / (HI - LO)) * 8) + 1));
+
+/* ---- lens buttons ---- */
+const lensBox = document.querySelector('.lenses');
+LENSES.forEach(L => {
+  const b = document.createElement('button');
+  b.className = 'lens'; b.type = 'button';
+  b.setAttribute('aria-pressed', L === lens);
+  b.innerHTML = '<b></b><span></span>';
+  b.querySelector('b').textContent = L.name;
+  b.querySelector('span').textContent = L.sub;
+  b.onclick = () => { lens = L; render(); };
+  lensBox.appendChild(b);
+});
+
+/* ---- map paths ---- */
+const pg = document.getElementById('paths'), NS = 'http://www.w3.org/2000/svg';
+const pathEl = {};
+D.geo.forEach(g => {
+  const p = document.createElementNS(NS, 'path');
+  p.setAttribute('d', g.d); p.setAttribute('class', 'c');
+  if (D.scores[g.id]) {
+    p.classList.add('hit');
+    p.addEventListener('mouseenter', () => { sel = g.id; paint(); });
+    p.addEventListener('click', () => { sel = g.id; paint(); });
+    const t = document.createElementNS(NS, 'title'); t.textContent = D.scores[g.id].n; p.appendChild(t);
+    (pathEl[g.id] = pathEl[g.id] || []).push(p);
+  } else { p.classList.add('ns'); }
+  pg.appendChild(p);
+});
+
+/* ---- markers ---- */
+const mg = document.getElementById('marks');
+D.markers.forEach((m, i) => {
+  const g = document.createElementNS(NS, 'g');
+  g.setAttribute('class', 'mk'); g.dataset.i = i;
+  g.innerHTML = '<circle class="o" r="7"></circle><circle class="i" r="2.6"></circle>';
+  [...g.children].forEach(c => { c.setAttribute('cx', m.x); c.setAttribute('cy', m.y); });
+  const t = document.createElementNS(NS, 'title'); t.textContent = m.n; g.appendChild(t);
+  g.addEventListener('mouseenter', () => { sel = 'M' + i; paint(); });
+  g.addEventListener('click', () => { sel = 'M' + i; paint(); });
+  mg.appendChild(g);
+});
+
+/* ---- picks list ---- */
+const picksBox = document.getElementById('picks');
+D.markers.forEach((m, i) => {
+  const li = document.createElement('li');
+  const b = document.createElement('button');
+  b.className = 'pk'; b.type = 'button'; b.dataset.i = i;
+  b.innerHTML = '<b></b><span></span>';
+  b.querySelector('b').textContent = m.n;
+  b.querySelector('span').textContent = m.t;
+  b.onclick = () => { sel = 'M' + i; paint(); };
+  li.appendChild(b); picksBox.appendChild(li);
+});
+
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => { dir = t.dataset.dir; render(); });
+
+/* ---- render ---- */
+let ranked = [];
+function render(){
+  document.querySelectorAll('.lens').forEach((b, i) => b.setAttribute('aria-pressed', LENSES[i] === lens));
+  document.getElementById('lensname').textContent = lens.name;
+  document.getElementById('lgdomain').textContent = LO.toFixed(1) + ' → ' + HI.toFixed(1) + ' index';
+
+  ranked = Object.entries(D.scores)
+    .map(([id, s]) => ({ id, s, v: score(s, lens) }))
+    .sort((a, b) => b.v - a.v);
+  ranked.forEach((r, i) => r.rank = i + 1);
+  document.getElementById('eyebrow').textContent =
+    'Threat geography · four failure modes · ' + ranked.length + ' states scored';
+
+  for (const r of ranked) {
+    const cls = 'c hit s' + step(r.v);
+    (pathEl[r.id] || []).forEach(p => { p.setAttribute('class', cls); });
+  }
+
+  const list = dir === 'top' ? ranked.slice(0, 25) : ranked.slice(-25).reverse();
+  const ol = document.getElementById('rank');
+  ol.innerHTML = '';
+  list.forEach(r => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.className = 'rk'; b.type = 'button'; b.dataset.id = r.id;
+    b.innerHTML = '<span class="n"></span><span class="nm"></span>' +
+      '<span class="v"><i class="sw"></i><span class="num"></span></span>';
+    b.querySelector('.n').textContent = r.rank;
+    b.querySelector('.nm').textContent = r.s.n;
+    b.querySelector('.sw').style.background = 'var(--r' + step(r.v) + ')';
+    b.querySelector('.num').textContent = r.v.toFixed(1);
+    b.onclick = () => { sel = r.id; paint(); };
+    b.onmouseenter = () => { sel = r.id; paint(); };
+    li.appendChild(b); ol.appendChild(li);
+  });
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-pressed', t.dataset.dir === dir));
+  paint();
+}
+
+function paint(){
+  for (const id in pathEl) pathEl[id].forEach(p => p.classList.toggle('on', id === sel));
+  document.querySelectorAll('.mk').forEach(g => g.classList.toggle('on', sel === 'M' + g.dataset.i));
+  document.querySelectorAll('.rk').forEach(b => b.setAttribute('aria-current', b.dataset.id === sel));
+  document.querySelectorAll('.pk').forEach(b => b.setAttribute('aria-current', sel === 'M' + b.dataset.i));
+
+  const d = document.getElementById('detail');
+  if (sel[0] === 'M') {
+    const m = D.markers[+sel.slice(1)];
+    d.innerHTML = '<div class="dtop"><h4 class="dname"></h4>' +
+      '<div class="dscore"><b>—</b><span>sub-national</span></div></div>' +
+      '<p class="drank">REGIONAL PICK · NOT SEPARATELY SCORED</p><p class="dnote"></p>';
+    d.querySelector('.dname').textContent = m.n;
+    d.querySelector('.dnote').textContent = m.t;
+    return;
+  }
+  const r = ranked.find(x => x.id === sel) || ranked[0];
+  sel = r.id;
+  const used = lens.w;
+  d.innerHTML =
+    '<div class="dtop"><h4 class="dname"></h4>' +
+    '<div class="dscore"><b></b><span>index</span></div></div>' +
+    '<p class="drank"></p><p class="dnote"></p><dl class="dims"></dl>' +
+    (Object.keys(DIMS).every(k => used[k]) ? '' :
+      '<p class="dimkey">Faded measures carry no weight in this lens.</p>');
+  d.querySelector('.dname').textContent = r.s.n;
+  d.querySelector('.dscore b').textContent = r.v.toFixed(1);
+  d.querySelector('.dscore b').style.color = 'var(--r' + step(r.v) + ')';
+  d.querySelector('.drank').textContent =
+    'RANK ' + r.rank + ' OF ' + ranked.length + ' · ' + lens.name.toUpperCase() +
+    (lens.south && r.s.south ? ' · SOUTHERN HEMISPHERE +0.6' : '');
+  d.querySelector('.dnote').textContent = r.s.note || '';
+  const dl = d.querySelector('.dims');
+  for (const k in DIMS) {
+    const w = used[k] || 0;
+    const row = document.createElement('div');
+    row.className = 'dim' + (w ? ' wt' : ' off');
+    row.innerHTML = '<dt></dt><div class="bar"><i></i></div><dd></dd>';
+    row.querySelector('dt').textContent = DIMS[k];
+    row.querySelector('.bar i').style.width = (r.s[k] * 10) + '%';
+    row.querySelector('dd').textContent = r.s[k];
+    dl.appendChild(row);
+  }
+}
+render();
+})();
+</script>

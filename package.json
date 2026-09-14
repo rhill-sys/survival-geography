@@ -1,0 +1,16 @@
+{
+  "name": "survival-geography",
+  "version": "1.0.0",
+  "description": "A world map scoring 186 states on resilience to AI-driven physical threats",
+  "scripts": {
+    "build": "node build.js && node build-standalone.js && cp dist/index.html index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "d3-geo": "^3.1.1",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
+  }
+}
